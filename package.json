@@ -1,0 +1,9 @@
+{
+  "name": "psa-cracker-site",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PSA Cracker: static site plus scheduled Netlify functions for daily card news.",
+  "type": "module",
+  "scripts": { "test": "node tests/feed.test.mjs" },
+  "dependencies": { "@netlify/blobs": "^8.1.0" }
+}
