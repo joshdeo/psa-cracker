@@ -1932,7 +1932,16 @@ window.PSAC_NEWS_SEED=[{"id": "n1", "t": "basketball", "src": "CBS Sports", "d":
       return fetch('/', {method:'POST', headers:{'Content-Type':'application/x-www-form-urlencoded'}, body:body}).catch(function(){});
     } catch(e){ return Promise.resolve(); }
   }
-  function show(node, msg){ node.textContent = msg; node.hidden = false; }
+  function show(node, msg){
+    node.textContent = msg; node.hidden = false;
+    var sum = $('coSum');
+    if (node.id === 'coErr' && sum){
+      var old = $('coSumErr'); if (old) old.remove();
+      var m = el('div','msg',msg); m.id='coSumErr'; m.setAttribute('role','alert');
+      var btn = $('coBtn'); if (btn) sum.insertBefore(m, btn);
+    }
+    try { node.scrollIntoView({behavior:'smooth', block:'center'}); } catch(e){}
+  }
 
   /* ---------- checkout page ---------- */
   function renderCheckout(){
@@ -1959,9 +1968,9 @@ window.PSAC_NEWS_SEED=[{"id": "n1", "t": "basketball", "src": "CBS Sports", "d":
   $('orderForm').addEventListener('submit', function(ev){
     ev.preventDefault();
     var f = ev.target, err = $('coErr'), cart = A.cart();
-    err.hidden = true;
+    err.hidden = true; var oldE = $('coSumErr'); if (oldE) oldE.remove();
     if (!cart.length) return;
-    var missing = []; cart.forEach(function(it,i){ if (!/^\d{5,12}$/.test((it.cert||'').replace(/\s/g,''))) missing.push(i+1); });
+    var missing = []; cart.forEach(function(it,i){ if (!/^\d{3,20}$/.test((it.cert||'').replace(/\s/g,''))) missing.push(i+1); });
     if (missing.length) return show(err, 'Add the PSA certificate number (digits only) for card '+missing.join(', ')+' in your cart, then come back.');
     var req = f.querySelectorAll('[required]'), bad = null;
     for (var i=0;i<req.length;i++){ var r = req[i]; if (r.type==='checkbox' ? !r.checked : !r.value.trim()){ bad = r; break; } }
